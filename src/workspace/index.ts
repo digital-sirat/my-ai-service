@@ -1,4 +1,16 @@
 export { createWorkspaceEntry } from './WorkspaceEntry';
+export { WORKSPACE_COMMAND_PALETTE } from './commandPaletteContracts';
+export { FUTURE_WORKSPACE_EXTENSION_REGISTRY } from './extensionRegistry';
 export { FUTURE_WORKSPACE_EXTENSIONS, WORKSPACE_INFORMATION_ARCHITECTURE, WORKSPACE_MODALITIES, WORKSPACE_SECTION_IDS } from './informationArchitecture';
+export { EMPTY_WORKSPACE_BREADCRUMBS, EMPTY_WORKSPACE_CONTEXT, EMPTY_WORKSPACE_TABS, NAVIGABLE_WORKSPACE_SECTION_IDS, WORKSPACE_NAVIGATION_TREE } from './navigationContracts';
+export { WORKSPACE_PERMISSION_TIERS } from './permissionContracts';
+export { WORKSPACE_SEARCH_SCOPES } from './searchContracts';
 export { UNIFIED_AI_WORKSPACE_FEATURE_FLAG } from './types';
+export { WORKSPACE_CAPABILITIES, WORKSPACE_REGIONS } from './workspaceContracts';
+export type { WorkspaceCommandPaletteSection, WorkspaceCommandPaletteSectionId } from './commandPaletteContracts';
+export type { WorkspaceExtensionGroup, WorkspaceExtensionGroupId } from './extensionRegistry';
+export type { WorkspaceBreadcrumbContract, WorkspaceContextContract, WorkspaceNavigationGroup, WorkspaceNavigationGroupId, WorkspaceNavigationItem, WorkspaceTabContract } from './navigationContracts';
+export type { WorkspacePermissionContract, WorkspacePermissionTier } from './permissionContracts';
+export type { WorkspaceSearchScope, WorkspaceSearchScopeId } from './searchContracts';
 export type { WorkspaceChildPlaceholder, WorkspaceEntry, WorkspaceFeatureFlagProvider, WorkspaceFoundation, WorkspaceIconPlaceholder, WorkspaceModality, WorkspaceRoutePlaceholder, WorkspaceSectionDefinition, WorkspaceSectionId, WorkspaceSectionVisibility, WorkspaceSpaceDefinition, WorkspaceSpaceId } from './types';
+export type { WorkspaceCapabilitiesContract, WorkspaceRegionContract, WorkspaceRegionId } from './workspaceContracts';

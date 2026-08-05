@@ -1,0 +1,8 @@
+export type WorkspaceRegionId = 'header' | 'left-sidebar' | 'center-workspace' | 'right-sidebar' | 'bottom-composer' | 'floating-panels' | 'modal-layer' | 'overlay-layer' | 'notifications';
+export interface WorkspaceRegionContract { readonly id: WorkspaceRegionId; readonly title: string; readonly kind: 'architectural-placeholder'; }
+export const WORKSPACE_REGIONS: readonly WorkspaceRegionContract[] = Object.freeze([
+  ['header','Header'],['left-sidebar','Left Sidebar'],['center-workspace','Center Workspace'],['right-sidebar','Right Sidebar'],['bottom-composer','Bottom Composer'],['floating-panels','Floating Panels'],['modal-layer','Modal Layer'],['overlay-layer','Overlay Layer'],['notifications','Notifications']
+].map(([id,title]) => Object.freeze({ id: id as WorkspaceRegionId, title, kind: 'architectural-placeholder' as const })));
+
+export interface WorkspaceCapabilitiesContract { readonly supportsHistory: boolean; readonly supportsFavorites: boolean; readonly supportsProjects: boolean; readonly supportsSearch: boolean; readonly supportsKnowledge: boolean; readonly supportsMarketplace: boolean; readonly supportsGallery: boolean; readonly supportsNotifications: boolean; readonly supportsBilling: boolean; readonly supportsProfile: boolean; readonly supportsAgents: boolean; readonly supportsWorkflows: boolean; }
+export const WORKSPACE_CAPABILITIES: WorkspaceCapabilitiesContract = Object.freeze({ supportsHistory:true,supportsFavorites:true,supportsProjects:true,supportsSearch:true,supportsKnowledge:true,supportsMarketplace:true,supportsGallery:true,supportsNotifications:true,supportsBilling:true,supportsProfile:true,supportsAgents:true,supportsWorkflows:true });

@@ -2,9 +2,11 @@ import type { Component } from 'vue';
 
 export type WorkspaceModality = 'text' | 'image' | 'video' | 'audio' | 'tools';
 export type WorkspaceSectionId =
-  | WorkspaceModality | 'gallery' | 'community' | 'blog' | 'learning' | 'marketplace'
-  | 'projects' | 'files' | 'assets' | 'history' | 'favorites' | 'search'
-  | 'notifications' | 'settings' | 'billing' | 'profile';
+  | WorkspaceModality | 'agents' | 'workflows' | 'gallery' | 'community' | 'blog'
+  | 'learning' | 'marketplace' | 'templates' | 'projects' | 'files' | 'assets'
+  | 'knowledge-base' | 'prompt-library' | 'history' | 'favorites' | 'shared'
+  | 'trash' | 'search' | 'notifications' | 'settings' | 'billing' | 'profile'
+  | 'integrations';
 export type WorkspaceSectionVisibility = 'primary' | 'future';
 export type WorkspaceSpaceId = 'ai-space' | 'user-space' | 'content-space';
 

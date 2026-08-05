@@ -15,3 +15,12 @@ export const validateReferenceId = (value: string): CommercialValidationResult<s
 export const validateInvoiceId = validateReferenceId;
 export const validateOrderId = validateReferenceId;
 export const validateTransactionId = validateReferenceId;
+export type WorkspaceValidatedAccountStatus = 'active' | 'restricted' | 'suspended' | 'closed';
+export type WorkspaceValidatedLedgerType = 'credit' | 'consumption' | 'reservation' | 'release' | 'adjustment';
+export const validateAccountIdentifier = validateReferenceId;
+export const validateLedgerReference = validateReferenceId;
+export const validateTokenAmount = validateMonetaryValue;
+export const validateReservationAmount = validateMonetaryValue;
+export const validateConsumptionAmount = validateMonetaryValue;
+export const validateAccountStatus = (value: string): CommercialValidationResult<WorkspaceValidatedAccountStatus> => ['active', 'restricted', 'suspended', 'closed'].includes(value) ? valid(value as WorkspaceValidatedAccountStatus) : invalid(value.length === 0 ? 'required' : 'invalid-value');
+export const validateLedgerType = (value: string): CommercialValidationResult<WorkspaceValidatedLedgerType> => ['credit', 'consumption', 'reservation', 'release', 'adjustment'].includes(value) ? valid(value as WorkspaceValidatedLedgerType) : invalid(value.length === 0 ? 'required' : 'invalid-value');

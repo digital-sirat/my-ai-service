@@ -7,7 +7,7 @@
       </div>
     </div>
     <el-select v-model="value" class="value" :placeholder="$t('seedance.placeholder.select')">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+      <el-option v-for="item in displayOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
   </div>
 </template>
@@ -27,6 +27,8 @@ import {
   SEEDANCE_MODEL_2_0_FAST,
   SEEDANCE_MODEL_2_0_MINI
 } from '@/constants';
+import { adaptLegacySelectorOptions, catalogUiProvider } from '@/modelCatalogUi';
+import type { CatalogUiContext } from '@/modelCatalogUi';
 
 export default defineComponent({
   name: 'SeedanceModelSelector',
@@ -37,6 +39,7 @@ export default defineComponent({
   },
   data() {
     return {
+      catalog: undefined as CatalogUiContext['catalog'] | undefined,
       options: [
         { value: SEEDANCE_MODEL_2_0, label: this.$t('seedance.model.seedance20') },
         { value: SEEDANCE_MODEL_2_0_FAST, label: this.$t('seedance.model.seedance20Fast') },
@@ -50,6 +53,9 @@ export default defineComponent({
     };
   },
   computed: {
+    displayOptions() {
+      return adaptLegacySelectorOptions(this.options, { enabled: catalogUiProvider.isEnabled(), catalog: this.catalog });
+    },
     value: {
       get() {
         return this.$store.state.seedance?.config?.model;
@@ -65,6 +71,11 @@ export default defineComponent({
   mounted() {
     if (!this.value) {
       this.value = SEEDANCE_DEFAULT_MODEL;
+    }
+    if (catalogUiProvider.isEnabled()) {
+      void catalogUiProvider.load().then((context) => {
+        if (context) this.catalog = context.catalog;
+      });
     }
   }
 });

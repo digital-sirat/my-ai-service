@@ -83,6 +83,8 @@ import { evaluateUserIdGuard } from '@/utils/crossSiteUser';
 import { handleChunkLoadError } from '@/utils/chunkLoadError';
 import { loginRedirect } from '@/utils/login';
 import { isNative, isDesktop } from '@/utils/surface';
+import { applyLegacyRouteMetadata } from '@/navigation/legacyCompatibility';
+import type { RouteRecordRaw } from 'vue-router';
 
 // Sections that require a logged-in user — guests hitting these are sent to the
 // login flow (web: redirect preserving the target; native/desktop: in-app
@@ -361,7 +363,7 @@ export const getDefaultRoute = (): { name: string } => {
   return { name: ROUTE_CHATGPT_CONVERSATION_NEW };
 };
 
-export const routes = [
+const legacyRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: (to: RouteLocationGeneric) => ({ ...getDefaultRoute(), query: to.query })
@@ -414,6 +416,10 @@ export const routes = [
     meta: { auth: false }
   }
 ];
+
+// Product Foundation: annotate existing records in place; no V2 paths are registered.
+applyLegacyRouteMetadata(legacyRoutes);
+export const routes = legacyRoutes;
 
 // vite-ssg owns router creation (memory history at build, web history on the
 // client). Guards attach to the per-app router inside the ViteSSG setup.

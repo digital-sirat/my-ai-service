@@ -8,7 +8,7 @@
     <template #modals><component :is="foundation.modalLayer" /></template>
     <template #overlays><component :is="foundation.overlayLayer" /></template>
   </component>
-  <section v-else class="workspace-integration-unavailable" aria-label="Unified AI Workspace" />
+  <section v-else class="workspace-integration-unavailable" aria-label="Unified AI Workspace" data-workspace-state="unavailable" />
 </template>
 <script setup lang="ts">
 import { onBeforeMount, shallowRef } from 'vue';

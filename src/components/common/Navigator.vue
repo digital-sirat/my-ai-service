@@ -161,7 +161,7 @@ import { isMacOS } from '@/utils/surface';
 import { desktopBridge } from '@/utils/desktop';
 import { type CapabilityKey } from '@/constants/capabilities';
 import { resolveCapabilityPresentation } from '@/utils/capabilityPresentation';
-import { isWorkspaceIntegrationEnabled, WORKSPACE_NAVIGATION_ICON, WORKSPACE_NAVIGATION_LABEL, WORKSPACE_ROUTE_PATH } from '@/integrations/workspace';
+import { getWorkspaceNavigationEntry } from '@/integrations/workspace';
 
 interface NavLink {
   route: { name: string } | { path: string };
@@ -243,7 +243,8 @@ export default defineComponent({
   computed: {
     links(): NavLink[] {
       const result: NavLink[] = [];
-      if (isWorkspaceIntegrationEnabled()) result.push({ route: { path: WORKSPACE_ROUTE_PATH }, displayName: WORKSPACE_NAVIGATION_LABEL, logo: WORKSPACE_NAVIGATION_ICON, routes: [], path: WORKSPACE_ROUTE_PATH, category: 'workspace' });
+      const workspaceNavigation = getWorkspaceNavigationEntry();
+      if (workspaceNavigation) result.push({ route: { path: workspaceNavigation.path }, displayName: workspaceNavigation.label, logo: workspaceNavigation.icon, routes: [], path: workspaceNavigation.path, category: 'workspace' });
       // Chat category
       if (this.$store?.state?.site?.features?.chatgpt?.enabled) {
         result.push({

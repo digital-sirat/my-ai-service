@@ -1,0 +1,17 @@
+export type CommercialValidationCode = 'required' | 'invalid-format' | 'invalid-value';
+export type CommercialValidationResult<T> = Readonly<{ readonly valid: true; readonly value: T }> | Readonly<{ readonly valid: false; readonly code: CommercialValidationCode }>;
+const valid = <T>(value: T): CommercialValidationResult<T> => Object.freeze({ valid: true, value });
+const invalid = <T>(code: CommercialValidationCode): CommercialValidationResult<T> => Object.freeze({ valid: false, code });
+const validateText = (value: string, pattern: RegExp, maxLength: number): CommercialValidationResult<string> => { if (value.length === 0) return invalid('required'); return value.length <= maxLength && pattern.test(value) ? valid(value) : invalid('invalid-format'); };
+export const validateMonetaryValue = (value: string): CommercialValidationResult<string> => /^(0|[1-9]\d*)$/.test(value) ? valid(value) : invalid(value.length === 0 ? 'required' : 'invalid-value');
+export const validateTokenBalance = validateMonetaryValue;
+export const validateCurrencyCode = (value: string): CommercialValidationResult<string> => validateText(value, /^[A-Z]{3}$/, 3);
+export const validateLocaleCode = (value: string): CommercialValidationResult<string> => validateText(value, /^[a-z]{2,3}(?:-[A-Z]{2})?$/, 6);
+export const validateLanguageCode = (value: string): CommercialValidationResult<string> => validateText(value, /^[a-z]{2,3}$/, 3);
+export const validateTimeZoneIdentifier = (value: string): CommercialValidationResult<string> => validateText(value, /^(?:UTC|[A-Za-z_]+(?:\/[A-Za-z0-9_+.-]+)+)$/, 64);
+export const validateCountryCode = (value: string): CommercialValidationResult<string> => validateText(value, /^[A-Z]{2}$/, 2);
+export const validateIsoDateTime = (value: string): CommercialValidationResult<string> => validateText(value, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/, 24);
+export const validateReferenceId = (value: string): CommercialValidationResult<string> => validateText(value, /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[A-Za-z0-9][A-Za-z0-9._:-]{0,63})$/i, 64);
+export const validateInvoiceId = validateReferenceId;
+export const validateOrderId = validateReferenceId;
+export const validateTransactionId = validateReferenceId;

@@ -1,0 +1,2 @@
+export interface WorkspaceCommercialCapabilities { readonly accountAvailable: boolean; readonly billingAvailable: boolean; readonly paymentsAvailable: boolean; readonly subscriptionsAvailable: boolean; readonly walletAvailable: boolean; readonly purchaseHistoryAvailable: boolean; readonly ordersAvailable: boolean; readonly transactionsAvailable: boolean; readonly invoicesAvailable: boolean; }
+export const createWorkspaceCommercialCapabilities = (capabilities: WorkspaceCommercialCapabilities): WorkspaceCommercialCapabilities => Object.freeze({ ...capabilities });

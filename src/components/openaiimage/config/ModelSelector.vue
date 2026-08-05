@@ -7,7 +7,7 @@
       </div>
     </div>
     <el-select v-model="value" class="value" :placeholder="$t('openaiimage.placeholder.select')">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+      <el-option v-for="item in displayOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
   </div>
 </template>
@@ -23,6 +23,8 @@ import {
   OPENAIIMAGE_MODEL_GPT_IMAGE_2_OFFICIAL
 } from '@/constants';
 import InfoIcon from '@/components/common/InfoIcon.vue';
+import { adaptLegacySelectorOptions, catalogUiProvider } from '@/modelCatalogUi';
+import type { CatalogUiContext } from '@/modelCatalogUi';
 
 export default defineComponent({
   name: 'OpenAIImageModelSelector',
@@ -33,6 +35,7 @@ export default defineComponent({
   },
   data() {
     return {
+      catalog: undefined as CatalogUiContext['catalog'] | undefined,
       options: [
         {
           value: OPENAIIMAGE_MODEL_GPT_IMAGE_1,
@@ -54,6 +57,12 @@ export default defineComponent({
     };
   },
   computed: {
+    displayOptions() {
+      return adaptLegacySelectorOptions(this.options, {
+        enabled: catalogUiProvider.isEnabled(),
+        catalog: this.catalog
+      });
+    },
     value: {
       get() {
         return this.$store.state.openaiimage?.config?.model;
@@ -70,8 +79,15 @@ export default defineComponent({
     }
   },
   mounted() {
+    // Keep the legacy initialization synchronous and in its original order.
     if (!this.value) {
       this.value = OPENAIIMAGE_DEFAULT_MODEL;
+    }
+    // P3 is loaded through P4 only after explicit opt-in.
+    if (catalogUiProvider.isEnabled()) {
+      void catalogUiProvider.load().then((context) => {
+        if (context) this.catalog = context.catalog;
+      });
     }
   }
 });

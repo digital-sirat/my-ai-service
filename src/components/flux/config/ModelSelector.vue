@@ -2,7 +2,7 @@
   <div class="field">
     <h2 class="title font-bold">{{ $t('flux.name.model') }}</h2>
     <el-select v-model="value" class="value" :placeholder="$t('flux.placeholder.select')">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+      <el-option v-for="item in displayOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
   </div>
 </template>
@@ -11,6 +11,8 @@
 import { defineComponent } from 'vue';
 import { ElSelect, ElOption } from 'element-plus';
 import { FLUX_DEFAULT_MODEL } from '@/constants';
+import { adaptLegacySelectorOptions, catalogUiProvider } from '@/modelCatalogUi';
+import type { CatalogUiContext } from '@/modelCatalogUi';
 
 export default defineComponent({
   name: 'ModelSelector',
@@ -27,6 +29,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
   data() {
     return {
+      catalog: undefined as CatalogUiContext['catalog'] | undefined,
       options: [
         {
           value: 'flux-dev',
@@ -60,6 +63,9 @@ export default defineComponent({
     };
   },
   computed: {
+    displayOptions() {
+      return adaptLegacySelectorOptions(this.options, { enabled: catalogUiProvider.isEnabled(), catalog: this.catalog });
+    },
     value: {
       get() {
         return this.$store.state.flux?.config?.model;
@@ -75,6 +81,11 @@ export default defineComponent({
   mounted() {
     if (!this.value) {
       this.value = FLUX_DEFAULT_MODEL;
+    }
+    if (catalogUiProvider.isEnabled()) {
+      void catalogUiProvider.load().then((context) => {
+        if (context) this.catalog = context.catalog;
+      });
     }
   }
 });

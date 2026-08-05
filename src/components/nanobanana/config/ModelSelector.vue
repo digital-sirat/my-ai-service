@@ -7,7 +7,7 @@
       </div>
     </div>
     <el-select v-model="value" class="value" :placeholder="$t('nanobanana.placeholder.select')">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+      <el-option v-for="item in displayOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
   </div>
 </template>
@@ -23,6 +23,8 @@ import {
   NANOBANANA_MODEL_NANO_BANANA_2
 } from '@/constants';
 import InfoIcon from '@/components/common/InfoIcon.vue';
+import { adaptLegacySelectorOptions, catalogUiProvider } from '@/modelCatalogUi';
+import type { CatalogUiContext } from '@/modelCatalogUi';
 
 export default defineComponent({
   name: 'NanobananaModelSelector',
@@ -33,6 +35,7 @@ export default defineComponent({
   },
   data() {
     return {
+      catalog: undefined as CatalogUiContext['catalog'] | undefined,
       options: [
         {
           value: NANOBANANA_MODEL_NANO_BANANA,
@@ -54,6 +57,9 @@ export default defineComponent({
     };
   },
   computed: {
+    displayOptions() {
+      return adaptLegacySelectorOptions(this.options, { enabled: catalogUiProvider.isEnabled(), catalog: this.catalog });
+    },
     value: {
       get() {
         return this.$store.state.nanobanana?.config?.model;
@@ -72,6 +78,11 @@ export default defineComponent({
   mounted() {
     if (!this.value) {
       this.value = NANOBANANA_DEFAULT_MODEL;
+    }
+    if (catalogUiProvider.isEnabled()) {
+      void catalogUiProvider.load().then((context) => {
+        if (context) this.catalog = context.catalog;
+      });
     }
   }
 });

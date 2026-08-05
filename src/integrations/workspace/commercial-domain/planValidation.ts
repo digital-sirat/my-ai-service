@@ -1,0 +1,8 @@
+import type { CommercialValidationCode, CommercialValidationResult } from './validation'; import type { WorkspaceEntitlementType, WorkspaceFeatureStatus, WorkspacePlanStatus } from './plans';
+const valid=<T>(value:T):CommercialValidationResult<T>=>Object.freeze({valid:true,value});const invalid=<T>(code:CommercialValidationCode):CommercialValidationResult<T>=>Object.freeze({valid:false,code});
+const identifier=(value:string):CommercialValidationResult<string>=>value.length>0&&value.length<=64&&/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(value)?valid(value):invalid(value.length===0?'required':'invalid-format');
+export const validatePlanIdentifier=identifier;export const validateProductIdentifier=identifier;export const validateFeatureIdentifier=identifier;
+export const validatePlanStatus=(value:string):CommercialValidationResult<WorkspacePlanStatus>=>['active','inactive','expired'].includes(value)?valid(value as WorkspacePlanStatus):invalid(value.length===0?'required':'invalid-value');
+export const validateFeatureStatus=(value:string):CommercialValidationResult<WorkspaceFeatureStatus>=>['enabled','disabled'].includes(value)?valid(value as WorkspaceFeatureStatus):invalid(value.length===0?'required':'invalid-value');
+export const validateEntitlementType=(value:string):CommercialValidationResult<WorkspaceEntitlementType>=>['feature','quota','region'].includes(value)?valid(value as WorkspaceEntitlementType):invalid(value.length===0?'required':'invalid-value');
+export const validateEntitlementLimit=(value:string):CommercialValidationResult<string>=>/^(0|[1-9]\d*)$/.test(value)?valid(value):invalid(value.length===0?'required':'invalid-value');

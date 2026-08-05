@@ -15,6 +15,6 @@ describe('navigation foundation contracts',()=>{
   for(const contract of expected){const actual=all.find(e=>e.name===contract.name);expect(actual?.path,contract.name).toBe(contract.path);expect(actual?.route.meta?.legacyRoute,contract.name).toBe(true);expect(actual?.route.meta?.productSection,contract.name).toBe(contract.section);expect(actual?.route.meta?.productAccess,contract.name).toBe(contract.access);}
  });
  it('preserves protected unnamed paths',()=>{expect(all.filter(e=>!e.name).map(e=>e.path)).toEqual(expect.arrayContaining([...LEGACY_UNNAMED_PATH_CONTRACT]));});
- it('defines one future item per section without provider entries',()=>{expect(NAVIGATION_SCHEMA.map(i=>i.id)).toEqual(PRODUCT_SECTIONS);expect(new Set(NAVIGATION_SCHEMA.map(i=>i.path)).size).toBe(NAVIGATION_SCHEMA.length);expect(NAVIGATION_SCHEMA.some(i=>i.path==='/chatgpt')).toBe(false);});
+ it('defines one future item per section without provider entries',()=>{expect(NAVIGATION_SCHEMA.map(i=>i.id)).toEqual(PRODUCT_SECTIONS);expect(new Set(NAVIGATION_SCHEMA.map(i=>i.path)).size).toBe(NAVIGATION_SCHEMA.length);expect(NAVIGATION_SCHEMA.map(i=>i.path)).not.toContain('/chatgpt');});
  it('keeps Navigation V2 opt-in',()=>{expect(NAVIGATION_V2_FEATURE_FLAG).toBe('navigation-v2');});
 });

@@ -1,0 +1,11 @@
+import type { CommercialValidationCode, CommercialValidationResult } from './validation';
+import type { WorkspacePricingStatus, WorkspacePricingUnit } from './pricing';
+const valid = <T>(value: T): CommercialValidationResult<T> => Object.freeze({ valid: true, value });
+const invalid = <T>(code: CommercialValidationCode): CommercialValidationResult<T> => Object.freeze({ valid: false, code });
+const integer = (value: string): CommercialValidationResult<string> => /^(0|[1-9]\d*)$/.test(value) ? valid(value) : invalid(value.length === 0 ? 'required' : 'invalid-value');
+export const validatePricingIdentifier = (value: string): CommercialValidationResult<string> => value.length > 0 && value.length <= 64 && /^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(value) ? valid(value) : invalid(value.length === 0 ? 'required' : 'invalid-format');
+export const validatePricingStatus = (value: string): CommercialValidationResult<WorkspacePricingStatus> => ['active', 'inactive', 'archived'].includes(value) ? valid(value as WorkspacePricingStatus) : invalid(value.length === 0 ? 'required' : 'invalid-value');
+export const validatePricingUnit = (value: string): CommercialValidationResult<WorkspacePricingUnit> => ['request', 'token', 'second', 'image', 'character', 'megabyte'].includes(value) ? valid(value as WorkspacePricingUnit) : invalid(value.length === 0 ? 'required' : 'invalid-value');
+export const validateUsageQuantity = integer;
+export const validateBillableAmount = integer;
+export const validateQuotaAmount = integer;

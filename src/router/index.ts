@@ -40,6 +40,7 @@ import webextrator from './webextrator';
 import codingBridge from './codingBridge';
 import settings from './settings';
 import share from './share';
+import workspace from './workspace';
 
 import {
   ROUTE_CHATGPT_CONVERSATION_NEW,
@@ -408,6 +409,7 @@ const legacyRoutes: RouteRecordRaw[] = [
   download,
   settings,
   share,
+  workspace,
   {
     // Standalone full-screen 404 — no header/footer chrome.
     path: '/:pathMatch(.*)*',

@@ -11,7 +11,7 @@
         <div
           v-for="(link, linkIndex) in visibleLinks"
           :key="linkIndex"
-          :class="{ link: true, active: link.routes.includes($route.name as string) }"
+          :class="{ link: true, active: isLinkActive(link) }"
         >
           <el-tooltip effect="dark" :content="link.displayName" :placement="direction === 'row' ? 'top' : 'right'">
             <el-image
@@ -50,7 +50,7 @@
               <div
                 v-for="(link, linkIndex) in overflowLinks"
                 :key="linkIndex"
-                :class="{ 'overflow-item': true, active: link.routes.includes($route.name as string) }"
+                :class="{ 'overflow-item': true, active: isLinkActive(link) }"
                 @click="onOverflowItemClick(link)"
               >
                 <el-image
@@ -161,13 +161,15 @@ import { isMacOS } from '@/utils/surface';
 import { desktopBridge } from '@/utils/desktop';
 import { type CapabilityKey } from '@/constants/capabilities';
 import { resolveCapabilityPresentation } from '@/utils/capabilityPresentation';
+import { isWorkspaceIntegrationEnabled, WORKSPACE_NAVIGATION_ICON, WORKSPACE_NAVIGATION_LABEL, WORKSPACE_ROUTE_PATH } from '@/integrations/workspace';
 
 interface NavLink {
-  route: { name: string };
+  route: { name: string } | { path: string };
   displayName: string;
   logo?: string;
   icon?: string;
   routes: string[];
+  path?: string;
   category: string;
   capability?: CapabilityKey;
   defaultLogo?: string;
@@ -241,6 +243,7 @@ export default defineComponent({
   computed: {
     links(): NavLink[] {
       const result: NavLink[] = [];
+      if (isWorkspaceIntegrationEnabled()) result.push({ route: { path: WORKSPACE_ROUTE_PATH }, displayName: WORKSPACE_NAVIGATION_LABEL, logo: WORKSPACE_NAVIGATION_ICON, routes: [], path: WORKSPACE_ROUTE_PATH, category: 'workspace' });
       // Chat category
       if (this.$store?.state?.site?.features?.chatgpt?.enabled) {
         result.push({
@@ -519,7 +522,8 @@ export default defineComponent({
         });
       }
       return result.map((link) => {
-        const capability = NAV_CAPABILITY_BY_ROUTE[link.route.name];
+        const routeName = 'name' in link.route ? link.route.name : undefined;
+        const capability = routeName ? NAV_CAPABILITY_BY_ROUTE[routeName] : undefined;
         if (!capability || !link.logo) return link;
         const defaultLogo = link.logo;
         const presentation = resolveCapabilityPresentation(
@@ -596,6 +600,7 @@ export default defineComponent({
     }
   },
   methods: {
+    isLinkActive(link: NavLink): boolean { return link.routes.includes(this.$route.name as string) || link.path === this.$route.path; },
     onCapabilityIconError(link: NavLink): void {
       if (link.capability && link.defaultLogo && link.logo !== link.defaultLogo) {
         this.failedCapabilityIcons[link.capability] = true;
@@ -608,7 +613,7 @@ export default defineComponent({
     onHome() {
       this.$router.push({ name: ROUTE_INDEX });
     },
-    onOverflowItemClick(link: { route: { name: string } }) {
+    onOverflowItemClick(link: NavLink) {
       this.showOverflow = false;
       this.$router.push(link.route);
     }

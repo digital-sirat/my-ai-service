@@ -120,6 +120,7 @@ export default defineComponent({
     // Re-sync the selected application's balance so the floating Credits pill
     // reflects spend right after a generation, without a full page reload.
     async refreshBalances() {
+      if (this.$route.meta.skipApplicationBootstrap) return;
       if (!this.appName) return;
       if (!this.$store.state.token?.access) return;
       if (typeof document !== 'undefined' && document.hidden) return;
@@ -141,6 +142,10 @@ export default defineComponent({
     async initialize() {
       const runId = ++this.initializeRunId;
       this.initialized = false;
+      if (this.$route.meta.skipApplicationBootstrap) {
+        this.initialized = true;
+        return;
+      }
       // Guests browse without an application/credential — defer all of that
       // (and login itself) until they actually start an operation. Skip the
       // whole bootstrap so we neither fire doomed authenticated requests nor
